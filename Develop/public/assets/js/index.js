@@ -31,7 +31,7 @@ const getNotes = () =>
     headers: {
       'Content-Type': 'application/json',
     },
-  });
+  })
 
 const saveNote = (note) =>
   fetch('/api/notes', {
@@ -71,7 +71,8 @@ const handleNoteSave = () => {
     title: noteTitle.value,
     text: noteText.value,
   };
-  saveNote(newNote).then(() => {
+  saveNote(newNote).then((data) => data.json()).then((note) => {
+    console.log(note);
     getAndRenderNotes();
     renderActiveNote();
   });
@@ -99,6 +100,8 @@ const handleNoteDelete = (e) => {
 const handleNoteView = (e) => {
   e.preventDefault();
   activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
+  console.log("this is active note ->", activeNote);
+  
   renderActiveNote();
 };
 
@@ -133,6 +136,7 @@ const renderNoteList = async (notes) => {
     const spanEl = document.createElement('span');
     spanEl.classList.add('list-item-title');
     spanEl.innerText = text;
+
     spanEl.addEventListener('click', handleNoteView);
 
     liEl.append(spanEl);
